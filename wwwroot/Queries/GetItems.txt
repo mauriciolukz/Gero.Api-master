@@ -1,0 +1,56 @@
+﻿SELECT		LTRIM(RTRIM(
+				CASE
+					WHEN IIM.IREF03 = '' THEN
+						CASE
+							WHEN IIM.ICLAS IN ('FV', 'FW', 'LI') THEN '43'
+							WHEN IIM.ICLAS IN ('FA', 'FB', 'FC', 'FH', 'FK', 'FM') THEN '20'
+							WHEN IIM.ICLAS IN ('PA', 'PE', 'PF', 'PL', 'PO', 'RP') THEN '21'
+							WHEN IIM.ICLAS IN ('AA', 'AC') THEN '22'
+							WHEN IIM.ICLAS IN ('1D') THEN '64'
+							WHEN IIM.ICLAS IN ('BC', '7A', '7B', '7F') THEN '24'
+							WHEN IIM.ICLAS IN ('HA') THEN '23'
+							ELSE '00'
+						END
+					ELSE
+						COALESCE(IIM.IREF03, '00')
+				END)
+			) AS ItemFamilyCode,
+            LTRIM(RTRIM(
+				CASE
+					WHEN IIM.IREF03 = '' THEN
+						CASE
+							WHEN IIM.ICLAS IN ('FV', 'FW', 'LI') THEN 'Vodka'
+							WHEN IIM.ICLAS IN ('FA', 'FB', 'FC', 'FH', 'FK', 'FM') THEN 'Flor de Caña'
+							WHEN IIM.ICLAS IN ('PA', 'PE', 'PF', 'PL', 'PO', 'RP') THEN 'Ron Plata'
+							WHEN IIM.ICLAS IN ('AA', 'AC') THEN 'Aguardientes'
+							WHEN IIM.ICLAS IN ('1D') THEN 'Envases'
+							WHEN IIM.ICLAS IN ('BC', '7A', '7B', '7F') THEN 'Otros Productos'
+							WHEN IIM.ICLAS IN ('HA') THEN 'Alcoholes'
+							ELSE 'Otros Productos'
+						END
+					ELSE
+						COALESCE(FAMILIA.CCDESC, 'Sin Familia')
+				END)
+			) AS ItemFamilyName,
+			LTRIM(RTRIM(IIM.IPROD)) AS ItemCode,
+			LTRIM(RTRIM(
+				CASE DESCR.PNDES
+					WHEN '-' THEN IIM.IDESC
+					WHEN '*' THEN IIM.IDESC
+					ELSE COALESCE(DESCR.PNDES, IIM.IDESC)
+				END
+			)) AS ItemName,
+			LTRIM(RTRIM(
+				CASE CONT.PNDES
+					WHEN '-' THEN '1'
+					WHEN '*' THEN '1'
+					ELSE COALESCE(CONT.PNDES, '1')
+				END
+			)) AS UnitsPerBox
+FROM		{schema}.IIM AS IIM
+LEFT JOIN	{schema}.MPN AS CONT
+ON			IIM.IPROD = CONT.PNPROD AND CONT.PNSEQ = 3
+LEFT JOIN	{schema}.MPN AS DESCR
+ON			IIM.IPROD = DESCR.PNPROD AND DESCR.PNSEQ = 8
+LEFT JOIN   {schema}.ZCC AS FAMILIA
+ON			IIM.IREF03 = FAMILIA.CCCODE AND CCTABL = 'SIRF3'

@@ -1,0 +1,158 @@
+SELECT      TOP {numberOfRecords}
+            ROW_NUMBER() OVER (ORDER BY EQL.LCUST, EQL.LLINE) AS Id,
+            CAST(EQL.LCUST AS INTEGER) AS CorporateFather,
+            LTRIM(RTRIM(EQL.LCLAS)) AS ItemClassCode,
+            LTRIM(RTRIM(CASE
+              WHEN IIM.IREF01 = '' THEN
+                CASE
+                  WHEN EQL.LCLAS IN ('FV', 'FW','LI') THEN '1'
+                  WHEN EQL.LCLAS IN ('FA', 'FB', 'FC','FH','FK', 'FM') THEN '1'
+                  WHEN EQL.LCLAS IN ('PA', 'PE', 'PF','PL','PO','RP') THEN '1'
+                  WHEN EQL.LCLAS IN ('AA','AC') THEN '1'
+                  WHEN EQL.LCLAS IN ('1D') THEN '1'
+                  WHEN EQL.LCLAS IN ('BC', '7A', '7B', '7F') THEN '1'
+                  WHEN EQL.LCLAS IN ('HA') THEN '1'
+                  ELSE '0'
+                END
+              ELSE
+                COALESCE(IIM.IREF01, '0')
+            END)) AS ItemGroupCode,
+            LTRIM(RTRIM(CASE
+              WHEN IIM.IREF01 = '' THEN
+				CASE
+                  WHEN EQL.LCLAS IN ('FV', 'FW','LI') THEN 'Licores y Vinos'
+                  WHEN EQL.LCLAS IN ('FA', 'FB', 'FC','FH','FK', 'FM') THEN 'Licores y Vinos'
+                  WHEN EQL.LCLAS IN ('PA', 'PE', 'PF','PL','PO','RP') THEN 'Licores y Vinos'
+                  WHEN EQL.LCLAS IN ('AA','AC' ) THEN 'Licores y Vinos'
+                  WHEN EQL.LCLAS IN ('1D') THEN 'Licores y Vinos'
+                  WHEN EQL.LCLAS IN ('BC', '7A', '7B', '7F') THEN 'Licores y Vinos'
+                  WHEN EQL.LCLAS IN ('HA') THEN 'Licores y Vinos'
+                  ELSE 'Otros Productos'
+                END
+              ELSE
+                COALESCE(GRUPO.CCDESC, 'Sin Grupo')
+            END)) AS ItemGroupName,
+            LTRIM(RTRIM(CASE
+              WHEN IIM.IREF03 = '' THEN
+                CASE
+                  WHEN EQL.LCLAS IN ('FV', 'FW','LI') THEN '43'
+                  WHEN EQL.LCLAS IN ('FA', 'FB', 'FC','FH','FK', 'FM') THEN '20'
+                  WHEN EQL.LCLAS IN ('PA', 'PE', 'PF','PL','PO','RP') THEN '21'
+                  WHEN EQL.LCLAS IN ('AA','AC') THEN '22'
+                  WHEN EQL.LCLAS IN ('1D') THEN '64'
+                  WHEN EQL.LCLAS IN ('BC', '7A', '7B', '7F') THEN '24'
+                  WHEN EQL.LCLAS IN ('HA') THEN '23'
+                  ELSE '00'
+                END
+              ELSE
+                COALESCE(IIM.IREF03, '00')
+            END)) AS ItemFamilyCode,
+            LTRIM(RTRIM(CASE
+			  WHEN IIM.IREF03 = '' THEN
+                CASE
+                  WHEN EQL.LCLAS IN ('FV', 'FW','LI') THEN 'Vodka'
+                  WHEN EQL.LCLAS IN ('FA', 'FB', 'FC','FH','FK', 'FM') THEN 'Flor de Caña'
+                  WHEN EQL.LCLAS IN ('PA', 'PE', 'PF','PL','PO','RP') THEN 'Ron Plata'
+                  WHEN EQL.LCLAS IN ('AA','AC') THEN 'Aguardientes'
+                  WHEN EQL.LCLAS IN ('1D') THEN 'Envases'
+                  WHEN EQL.LCLAS IN ('BC', '7A', '7B', '7F') THEN 'Otros Productos'
+                  WHEN EQL.LCLAS IN ('HA') THEN 'Alcoholes'
+                  ELSE 'Otros Productos'
+                END
+              ELSE
+                COALESCE(FAMILIA.CCDESC, 'Sin Familia')
+            END)) AS ItemFamilyName,
+            LTRIM(RTRIM(CASE
+              WHEN IIM.IREF02 = '' THEN
+                CASE
+                  WHEN EQL.LCLAS IN ('FV', 'FW','LI') THEN '43'
+                  WHEN EQL.LCLAS IN ('FA', 'FB', 'FC','FH','FK', 'FM') THEN '20'
+                  WHEN EQL.LCLAS IN ('PA', 'PE', 'PF','PL','PO','RP') THEN '21'
+                  WHEN EQL.LCLAS IN ('AA','AC') THEN '22'
+                  WHEN EQL.LCLAS IN ('1D') THEN '64'
+                  WHEN EQL.LCLAS IN ('BC', '7A', '7B', '7F') THEN '24'
+                  WHEN EQL.LCLAS IN ('HA') THEN '23'
+                  ELSE '00'
+                END
+              ELSE
+                COALESCE(IIM.IREF02, '00')
+            END)) AS ItemMarkCode,
+            LTRIM(RTRIM(CASE
+              WHEN IIM.IREF02 = '' THEN
+                CASE
+                  WHEN EQL.LCLAS IN ('FV', 'FW','LI') THEN 'Vodka'
+                  WHEN EQL.LCLAS IN ('FA', 'FB', 'FC','FH','FK', 'FM') THEN 'Flor de Caña'
+                  WHEN EQL.LCLAS IN ('PA', 'PE', 'PF','PL','PO','RP') THEN 'Ron Plata'
+                  WHEN EQL.LCLAS IN ('AA','AC') THEN 'Aguardientes'
+                  WHEN EQL.LCLAS IN ('1D') THEN 'Envases'
+                  WHEN EQL.LCLAS IN ('BC', '7A', '7B', '7F') THEN 'Otros Productos'
+                  WHEN EQL.LCLAS IN ('HA') THEN 'Alcoholes'
+                  ELSE 'Otros Productos'
+                END
+              ELSE
+                COALESCE(MARCA.CCDESC, 'Sin Marca')
+            END)) AS ItemMarkName,
+            LTRIM(RTRIM(EQL.LPROD)) AS ItemCode,
+            LTRIM(RTRIM(COALESCE(
+              (
+                SELECT    IDESC.PNDES
+                FROM      {schema}.MPN AS IDESC
+                WHERE     EQL.LPROD = IDESC.PNPROD
+                AND		  IDESC.PNSEQ = 8
+                AND		  IDESC.PNTYPE = 'I'
+              ),
+              IIM.IDESC
+            ))) AS ItemName,
+            (EQL.CLNPBL + EQL.CLTAXA) AS UnitPrice,
+            COALESCE(
+              (
+                SELECT    CONTEO.PNDES
+                FROM      {schema}.MPN AS CONTEO
+                WHERE     EQL.LPROD = CONTEO.PNPROD
+                AND       CONTEO.PNSEQ = 3
+                AND       CONTEO.PNTYPE = 'I'
+              ),
+              0
+            ) AS UnitsPerBox,
+            COALESCE(
+              (
+                SELECT      TOP 1 (S_EQL.CLNPBL + S_EQL.CLTAXA)
+                FROM        {schema}.MPN AS IENVASE
+                INNER JOIN  {schema}.EQL AS S_EQL
+                ON          IENVASE.PNDES = S_EQL.LPROD
+                AND         S_EQL.LCUST = EQL.LCUST
+                WHERE       IENVASE.PNPROD = EQL.LPROD
+                AND         IENVASE.PNSEQ = 9
+                AND         IENVASE.PNTYPE = 'I'
+              ),
+              0
+            ) AS ContainerPrice,
+            CASE
+              WHEN SUBSTRING(LCONT,3,1) <> 'E' AND EQL.LCUST <> 9992070 THEN
+                1
+              ELSE
+                0
+            END AS HasTax
+FROM        {schema}.EQL AS EQL
+INNER JOIN  {schema}.IIM AS IIM
+ON          EQL.LPROD = IIM.IPROD
+LEFT JOIN   {schema}.ZCC AS GRUPO
+ON          IIM.IREF01 = GRUPO.CCCODE
+AND         GRUPO.CCTABL = 'SIRF1'
+LEFT JOIN   {schema}.ZCC AS FAMILIA
+ON          IIM.IREF03 = FAMILIA.CCCODE
+AND         FAMILIA.CCTABL = 'SIRF3'
+LEFT JOIN   {schema}.ZCC AS MARCA
+ON          IIM.IREF02 = MARCA.CCCODE
+AND         MARCA.CCTABL = 'SIRF2'
+WHERE       EQL.LID = 'QL'
+AND         IIM.IID = 'IM'
+AND         EQL.LCUST IN (
+      			SELECT	DISTINCT RCM.CMPRCU
+      			FROM    {schema}.RCM RCM
+      			WHERE   RCM.CCUST BETWEEN 9900000 AND 9999999
+      			AND     RCM.CMUF02 = '1'
+      			AND     (RCM.CREF01 = '{routeCode}' OR RCM.CMUF04 = '{routeCode}') OR RCM.CWHSE = '{routeCode}'
+            )
+ORDER BY    EQL.LCUST,
+            EQL.LLINE

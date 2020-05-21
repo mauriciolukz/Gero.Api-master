@@ -1,0 +1,8 @@
+﻿SELECT		ROL.DD_Nombre AS WarehouseCode,
+			Ltrim(Rtrim(ROL.DD_Nombre)) + ' - ' + ROL.DD_Descripcion AS WarehouseName
+FROM		dbo.DiccionarioDeDatos AS ROL
+WHERE		ROL.DD_EstaActivo = 1
+			AND ROL.DD_PadreID = 700
+			AND Cast(ROL.DD_InformacionAdicional1 AS INTEGER) = 9
+			AND DD_InformacionAdicional3 = 'CD'
+ORDER BY	WarehouseCode

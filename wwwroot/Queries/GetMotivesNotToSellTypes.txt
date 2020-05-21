@@ -1,0 +1,5 @@
+﻿SELECT		CAST(Valor AS INT)  AS Id,
+			Descripcion AS Name
+FROM		Intranet.DISTRIBUCION.DST_DiccionarioDato
+WHERE		IDTipoEntrada = 1
+Order By	Id

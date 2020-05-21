@@ -1,0 +1,13 @@
+﻿Select		A.DD_Nombre As RouteCode,
+			LTRIM(RTRIM(A.DD_Descripcion)) As RouteName,
+			LTRIM(RTRIM(A.DD_InformacionAdicional2)) As RouteType,
+			LTRIM(RTRIM(A.DD_InformacionAdicional1)) AS WarehouseCode
+From		dbo.DiccionarioDeDatos As A
+Inner Join	dbo.Roles_X_Usuario As B
+On			A.DD_ID = B.ROL_ID_DD_ID
+Inner Join	dbo.Usuarios As C
+On			B.USR_ID = C.USR_ID
+Where		A.DD_PadreID = 2151
+And			A.DD_EstaActivo = 1
+And			C.USR_UsuarioAD = '{username}'
+Order By	1

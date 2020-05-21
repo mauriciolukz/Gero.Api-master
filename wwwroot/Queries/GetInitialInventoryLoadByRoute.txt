@@ -1,0 +1,49 @@
+﻿SELECT		LTRIM(RTRIM(SRC.SKU)) AS ItemCode,
+			LTRIM(RTRIM(SRC.SKU_DESC)) AS ItemName,
+			LTRIM(RTRIM(SRC.CONTEO)) AS UnitsPerBox,
+			ROUND(
+			SUM(SRC.INVENTARIO_INICIAL) *
+			(
+				CASE
+					WHEN SRC.IUMRC = 1 THEN 1
+					ELSE CAST(LTRIM(RTRIM(SRC.CONTEO)) AS INT)
+				END
+			), 0) AS InitialInventory,
+			SRC.IUMRC AS SaleFactor
+FROM		(
+				SELECT		ILI.LPROD AS SKU,
+							(
+								SELECT		IDESC.PNDES
+								FROM		{schema}.MPN AS IDESC
+								WHERE		IIM.IPROD = IDESC.PNPROD
+								AND			IDESC.PNSEQ = 8
+								AND			IDESC.PNTYPE = 'I'
+							) AS SKU_DESC,
+							(
+								ILI.LOPB + ILI.LRCT + ILI.LADJU - ILI.LISSU - ILI.LIALOC
+							) AS INVENTARIO_INICIAL,
+							(
+								SELECT		CONTEO.PNDES
+								FROM		{schema}.MPN AS CONTEO
+								WHERE		IIM.IPROD = CONTEO.PNPROD
+								AND			CONTEO.PNSEQ = 3
+								AND			CONTEO.PNTYPE = 'I'
+							) AS CONTEO,
+							IIM.IUMRC 
+				FROM		{schema}.ILI AS ILI
+				INNER JOIN	{schema}.IIM AS IIM
+				ON			ILI.LPROD = IIM.IPROD
+				AND			ILI.LID = 'LI'
+				AND			IIM.IID = 'IM'
+				INNER JOIN	{schema}.ILM AS ILM
+				ON			ILI.LWHS = ILM.WWHS
+				AND			ILI.LLOC = ILM.WLOC
+				WHERE		ILI.LWHS = '{routeCode}'
+				AND			ILM.WALLC = 'Y'
+			) AS SRC
+GROUP BY	SRC.SKU,
+			SRC.SKU_DESC,
+			SRC.CONTEO,
+			SRC.IUMRC 
+HAVING		SUM(SRC.INVENTARIO_INICIAL) > 0
+ORDER BY	SRC.SKU_DESC

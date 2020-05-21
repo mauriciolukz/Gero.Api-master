@@ -1,0 +1,19 @@
+﻿Select		D.DD_Nombre As WarehouseCode,
+			Ltrim(Rtrim(D.DD_Nombre)) + ' - ' + D.DD_Descripcion AS WarehouseName
+From		dbo.DiccionarioDeDatos As A
+Inner Join	dbo.Roles_X_Usuario As B
+On			A.DD_ID = B.ROL_ID_DD_ID
+Inner Join	dbo.Usuarios As C
+On			B.USR_ID = C.USR_ID
+Inner Join	dbo.DiccionarioDeDatos As D
+On			LTRIM(RTRIM(A.DD_InformacionAdicional1)) = D.DD_Nombre
+Where		A.DD_PadreID = 2151
+And			A.DD_EstaActivo = 1
+And			D.DD_EstaActivo = 1
+AND			D.DD_PadreID = 700
+AND			Cast(D.DD_InformacionAdicional1 AS INTEGER) = 9
+AND			D.DD_InformacionAdicional3 = 'CD'
+And			C.USR_UsuarioAD = '{username}'
+Group By	D.DD_Nombre,
+			(Ltrim(Rtrim(D.DD_Nombre)) + ' - ' + D.DD_Descripcion)
+Order By	1

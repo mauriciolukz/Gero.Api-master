@@ -1,0 +1,13 @@
+﻿Select		A.Id,
+			A.UserId,
+			Ltrim(Rtrim(B.USR_Nombre)) + ' ' + Ltrim(Rtrim(B.USR_Apellido)) As DisplayName,
+			B.USR_Cargo JobTitle,
+			C.Code As ApproverType
+From		DISTRIBUCION.CouponUsers As A
+Left Join	dbo.Usuarios As B
+On			A.UserId = B.USR_ID
+Inner Join	DISTRIBUCION.ApproverTypes As C
+On			A.ApproverTypeId = C.Id
+Where		B.USR_EstaActivo = 1
+And			C.Code = '{approverTypeCode}'
+And			A.Id In ({couponUserIds})

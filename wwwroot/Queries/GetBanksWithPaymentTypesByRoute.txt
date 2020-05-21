@@ -1,0 +1,52 @@
+﻿Select		ROW_NUMBER() OVER (ORDER BY CODIGO_BANCO) AS Id,
+			CODIGO_BANCO As BankCode,
+			BANCO As BankName,
+			TIPO_PAGO As PaymentTypeCode,
+			TIPO_PAGO_N As PaymentTypeName,
+			BANCO_DEPOSITO As DepositBank,
+			BANCO_DEPOSITO_BPCS As ForeignDepositBank,
+			MONEDA As CurrencyCode
+From		(
+				SELECT		BXR.Ruta AS RUTA,
+							TIP.ID AS TIPO_PAGO,
+							TIP.Moneda AS MONEDA,
+							BAN.Banco_SS AS CODIGO_BANCO,
+							BAN.Banco_SS_N AS BANCO,
+							BAN.Banco_Deposito AS BANCO_DEPOSITO,
+							BAN.Banco_BPCS AS BANCO_DEPOSITO_BPCS,
+							BXR.Origen AS ORIGEN,
+							DD.Descripcion AS TIPO_PAGO_N
+				FROM		Intranet.[DISTRIBUCION].[TIPO_PAGO] AS TIP
+				JOIN		Intranet.DISTRIBUCION.DST_DiccionarioDato DD
+				ON			DD.IDTipoEntrada=6 AND DD.VALOR=TIP.ID
+				LEFT JOIN	Intranet.[DISTRIBUCION].[BANCOS_X_RUTA] AS BXR
+				ON			BXR.Tipo_Pago = TIP.ID
+				INNER JOIN	DISTRIBUCION.DST_VW_Codigos_Bancos AS BAN
+				ON			BAN.Banco_Deposito = BXR.ID_Banco_Deposito
+				AND			BAN.Moneda = TIP.Moneda
+				AND			BXR.Origen = 0
+				WHERE		BXR.Ruta = '{routeCode}'
+				AND			BXR.Origen = 0
+
+				UNION ALL
+
+				SELECT		BXR.Ruta AS RUTA,
+							TIP.ID AS TIPO_PAGO,
+							TIP.Moneda AS MONEDA,
+							BAN.Banco_SS AS CODIGO_BANCO,
+							BAN.Banco_SS_N AS BANCO,
+							BAN.Banco_Deposito AS BANCO_DEPOSITO,
+							BAN.Banco_BPCS AS BANCO_DEPOSITO_BPCS,
+							BXR.Origen AS ORIGEN,
+							DD.Descripcion AS TIPO_PAGO_N
+				FROM		Intranet.[DISTRIBUCION].[TIPO_PAGO] AS TIP
+				JOIN		Intranet.DISTRIBUCION.DST_DiccionarioDato DD
+				ON			DD.IDTipoEntrada=6
+				AND			DD.VALOR=TIP.ID
+				LEFT JOIN	Intranet.[DISTRIBUCION].[BANCOS_X_RUTA] AS BXR
+				ON			BXR.Tipo_Pago = TIP.ID
+				CROSS JOIN	DISTRIBUCION.DST_VW_Codigos_Bancos AS BAN
+				WHERE		BXR.Ruta = '{routeCode}'
+				AND			BXR.Origen = 1
+				AND			BAN.Moneda = TIP.Moneda) As A
+Order By		BankName

@@ -1,0 +1,38 @@
+﻿SELECT	ROW_NUMBER() OVER (ORDER BY Ruta) AS Id,
+		Ruta As RouteCode,
+		CAST(CodigoCliente AS INTEGER) AS CustomerCode,
+		Sku AS ItemCode,
+		FechaFactura AS InvoiceDate,
+		Unidades AS UnitsQuantity,
+		Cajas AS BoxesQuantity,
+		TotalUnidades AS TotalOfUnits,
+		Num_Compra AS PurchaseNumber
+FROM	(
+			SELECT		F.CodigoCliente,
+						F.Ruta,
+						F.FechaFactura,
+						DF.Sku,
+						SUM(totalUnidades) AS TotalUnidades,
+						SUM(DF.CantidadCajas) AS Cajas,	
+						SUM(DF.CantidadUnidades) AS Unidades,	
+						RANK() OVER (
+							PARTITION BY DF.SKU, f.CodigoCliente ORDER BY CAST(F.FechaFactura AS DATE) DESC
+						) AS Num_Compra
+			FROM		DISTRIBUCION.DST_Factura AS F
+			INNER JOIN	DISTRIBUCION.DST_DetalleFactura AS DF
+			ON			F.IDFactura = DF.IDFactura
+			WHERE		CAST(CONVERT(VARCHAR(8), F.FechaFactura, 112) AS INT) BETWEEN CAST(CONVERT(VARCHAR(8), DATEADD(MONTH, -{numberOfMonthsBack}, DATEADD(MONTH, DATEDIFF(MONTH, '19000101', GETDATE()), '19000101')), 112) AS INT)
+			AND			CAST(CONVERT(VARCHAR(8), GETDATE(), 112) AS INT)
+			AND			F.CodigoCliente IN (
+							SELECT		DISTINCT RCM.CCUST
+							FROM		{schema}.RCM RCM
+							WHERE		RCM.CCUST BETWEEN 9900000 AND 9999999
+							AND			RCM.CMUF02 = '1'
+							AND ((RCM.CREF01 = '{routeCode}' OR RCM.CMUF04 = '{routeCode}') OR RCM.CWHSE = '{routeCode}')
+						)
+			GROUP BY	F.CodigoCliente,
+						F.Ruta,
+						F.FechaFactura,
+						DF.SKU
+		) AS TBL
+WHERE	Num_Compra <= {numberOfPurchases}

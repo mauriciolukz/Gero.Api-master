@@ -1,0 +1,56 @@
+﻿SELECT            RCM.CCUST AS CustomerCode,
+                  RCM.CMFTXC AS RUCNumber,
+                  RCM.CNME AS CustomerName,
+                  RCM.CCON AS BusinessName,
+                  PERFIL.CCDESC AS BusinessProfile,
+                  RCM.CREF04 AS BusinessChannelCode,
+                  CANAL.CCDESC AS BusinessChannelName,
+                  RCM.CTYPE AS CustomerTypeCode,
+                  RCT.CTDESC AS CustomerTypeName,
+                  RCM.CMAD5 AS Department,
+                  RCM.CMAD4 AS Municipality,
+                  RCM.CAD3 AS Neighborhood,
+                  RCM.CAD1 AS Address1,
+                  RCM.CAD2 AS Address2,
+                  RCM.CPHON AS PhoneNumber,
+                  RTM.TMDESC AS CreditType,
+                  RCM.CRDOL AS CreditLimit,
+                  RCM.CTERM AS CreditDays,
+                  RCM.CREF01 AS PresaleRouteCode,
+                  SALESMAN.CCDESC AS PresaleRouteName,
+                  RCM.CWHSE AS DeliveryRouteCode,
+                  IWM.LDESC AS DeliveryRouteName,
+                  RCM.CMABC AS VisitDaysCode,
+                  DIAVISITA.CCDESC AS VisitDaysName,
+                  RCM.CMUF01 AS SequenceOfVisit,
+                  RCM.CREF03 AS SellingAreaCode,
+                  AREAVENTAS.CCDESC AS SellingAreaName,
+                  RCM.CMPRCU AS CorporateFather,
+                  CASE
+                          WHEN TRIM(CMUF05) = '' THEN 0.00
+                          WHEN TRANSLATE(TRIM(CMUF05), ' ', '0123456789,. ') = '' THEN
+                              CASE WHEN CAST(CMUF05 AS INT) >= 1 THEN 0.00 ELSE CMUF05 END
+                          ELSE
+                              0.00
+                  END AS PercentageOfCentralization 
+FROM              {schema}.RCM AS RCM
+                  LEFT JOIN {schema}.RCT AS RCT ON RCM.CTYPE = RCT.CTCSTP AND RCT.CTCOMP = 9
+                  LEFT JOIN {schema}.RTM AS RTM ON RCM.CTERM = RTM.TMTERM AND RTM.TMCMPN = 9
+                  LEFT JOIN {schema}.ZCC AS PERFIL ON RCM.CREF05 = PERFIL.CCCODE AND PERFIL.CCTABL = 'SCRF5'
+                  LEFT JOIN {schema}.ZCC AS CANAL ON RCM.CREF04 = CANAL.CCCODE AND CANAL.CCTABL = 'SCRF4'
+                  LEFT JOIN {schema}.ZCC AS DIAVISITA ON RCM.CMABC = DIAVISITA.CCCODE AND DIAVISITA.CCTABL = 'CUSTABC'
+                  LEFT JOIN {schema}.ZCC AS AREAVENTAS ON RCM.CREF03 = AREAVENTAS.CCCODE AND AREAVENTAS.CCTABL = 'SCRF3'
+                  LEFT JOIN {schema}.ZCC AS REGION ON RCM.CREF02 = REGION.CCCODE AND REGION.CCTABL = 'SCRF2'
+                  LEFT JOIN {schema}.ZCC AS ESTADO ON RCM.CSTE = ESTADO.CCCODE AND ESTADO.CCTABL = 'STATE'
+                  LEFT JOIN {schema}.LCN AS LCN ON RCM.CCOUN = LCN.CNCNTY
+                  LEFT JOIN {schema}.LPC AS LPC ON RCM.CZIP = LPC.PCPSCD
+                  LEFT JOIN {schema}.ABK AS ABK ON RCM.CMBANK = ABK.BANK AND ABK.BKCMPY = 9
+                  LEFT JOIN {schema}.ZCC AS LANG ON RCM.CMLANG = LANG.CCCODE AND LANG.CCTABL = 'LANGUAGE'
+                  LEFT JOIN {schema}.ZCC AS SALESMAN ON RCM.CREF01 = SALESMAN.CCCODE AND SALESMAN.CCTABL = 'SCRF1'
+                  LEFT JOIN {schema}.ZPA AS ZPA ON RCM.CPCD = RIGHT(ZPA.PKEY,1) AND ZPA.IDPA = 'PT' AND ZPA.PKEY LIKE 'PAYTYPR%'
+                  LEFT JOIN {schema}.GCM AS GCM ON RCM.CCURR = GCM.CURCDE
+                  LEFT JOIN {schema}.IWM AS IWM ON RCM.CWHSE = IWM.LWHS AND IWM.WMCOMP = 9
+WHERE             RCM.CMID = 'CM'
+AND               RCM.CCUST BETWEEN 9900000 AND 9999999
+AND               RCM.CMUF02 = '1'
+AND               ((RCM.CREF01 = {routeCode} OR RCM.CMUF04 = {routeCode}) OR RCM.CWHSE = {routeCode})

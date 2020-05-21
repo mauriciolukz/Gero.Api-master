@@ -1,0 +1,58 @@
+SELECT            CAST(RCM.CCUST AS INTEGER) AS CustomerCode,
+                  LTRIM(RTRIM(RCM.CMFTXC)) AS RUCNumber,
+                  LTRIM(RTRIM(RCM.CNME)) AS CustomerName,
+                  LTRIM(RTRIM(RCM.CCON)) AS BusinessName,
+                  LTRIM(RTRIM(PERFIL.CCDESC)) AS BusinessProfile,
+                  LTRIM(RTRIM(RCM.CREF04)) AS BusinessChannelCode,
+                  LTRIM(RTRIM(CANAL.CCDESC)) AS BusinessChannelName,
+                  LTRIM(RTRIM(RCM.CTYPE)) AS CustomerTypeCode,
+                  LTRIM(RTRIM(RCT.CTDESC)) AS CustomerTypeName,
+                  LTRIM(RTRIM(RCM.CMAD5)) AS Department,
+                  LTRIM(RTRIM(RCM.CMAD4)) AS Municipality,
+                  LTRIM(RTRIM(RCM.CAD3)) AS Neighborhood,
+                  LTRIM(RTRIM(RCM.CAD1)) AS Address1,
+                  LTRIM(RTRIM(RCM.CAD2)) AS Address2,
+				  LTRIM(RTRIM(RCM.CMAD6)) AS CustomerLocation,
+                  LTRIM(RTRIM(RCM.CPHON)) AS PhoneNumber,
+                  LTRIM(RTRIM(RTM.TMDESC)) AS CreditType,
+                  RCM.CRDOL AS CreditLimit,
+                  LTRIM(RTRIM(RCM.CTERM)) AS CreditDays,
+                  LTRIM(RTRIM(RCM.CREF01)) AS PresaleRouteCode,
+                  LTRIM(RTRIM(SALESMAN.CCDESC)) AS PresaleRouteName,
+                  LTRIM(RTRIM(RCM.CWHSE)) AS DeliveryRouteCode,
+                  LTRIM(RTRIM(IWM.LDESC)) AS DeliveryRouteName,
+                  LTRIM(RTRIM(RCM.CMABC)) AS VisitDaysCode,
+                  LTRIM(RTRIM(DIAVISITA.CCDESC)) AS VisitDaysName,
+                  LTRIM(RTRIM(RCM.CMUF01)) AS SequenceOfVisit,
+                  LTRIM(RTRIM(RCM.CREF03)) AS SellingAreaCode,
+                  LTRIM(RTRIM(AREAVENTAS.CCDESC)) AS SellingAreaName,
+                  CAST(RCM.CMPRCU AS INTEGER) AS CorporateFather,
+                  CASE
+                          WHEN LTRIM(RTRIM(CMUF05)) = '' THEN 0.00
+                          WHEN CAST(LTRIM(RTRIM(CMUF05)) AS DECIMAL) > 0 THEN
+                              CAST(LTRIM(RTRIM(CMUF05)) AS DECIMAL)
+                          ELSE
+                              0.00
+                  END AS PercentageOfCentralization
+FROM              {schema}.RCM AS RCM
+LEFT JOIN		  {schema}.RCT AS RCT ON RCM.CTYPE = RCT.CTCSTP AND RCT.CTCOMP = 9
+LEFT JOIN		  {schema}.RTM AS RTM ON RCM.CTERM = RTM.TMTERM AND RTM.TMCMPN = 9
+LEFT JOIN		  {schema}.ZCC AS PERFIL ON RCM.CREF05 = PERFIL.CCCODE AND PERFIL.CCTABL = 'SCRF5'
+LEFT JOIN		  {schema}.ZCC AS CANAL ON RCM.CREF04 = CANAL.CCCODE AND CANAL.CCTABL = 'SCRF4'
+LEFT JOIN		  {schema}.ZCC AS DIAVISITA ON RCM.CMABC = DIAVISITA.CCCODE AND DIAVISITA.CCTABL = 'CUSTABC'
+LEFT JOIN		  {schema}.ZCC AS AREAVENTAS ON RCM.CREF03 = AREAVENTAS.CCCODE AND AREAVENTAS.CCTABL = 'SCRF3'
+LEFT JOIN		  {schema}.ZCC AS REGION ON RCM.CREF02 = REGION.CCCODE AND REGION.CCTABL = 'SCRF2'
+LEFT JOIN		  {schema}.ZCC AS ESTADO ON RCM.CSTE = ESTADO.CCCODE AND ESTADO.CCTABL = 'STATE'
+LEFT JOIN		  {schema}.LCN AS LCN ON RCM.CCOUN = LCN.CNCNTY
+LEFT JOIN		  {schema}.LPC AS LPC ON RCM.CZIP = LPC.PCPSCD
+LEFT JOIN		  {schema}.ABK AS ABK ON RCM.CMBANK = ABK.BANK AND ABK.BKCMPY = 9
+LEFT JOIN		  {schema}.ZCC AS LANG ON RCM.CMLANG = LANG.CCCODE AND LANG.CCTABL = 'LANGUAGE'
+LEFT JOIN		  {schema}.ZCC AS SALESMAN ON RCM.CREF01 = SALESMAN.CCCODE AND SALESMAN.CCTABL = 'SCRF1'
+LEFT JOIN		  {schema}.ZPA AS ZPA ON RCM.CPCD = RIGHT(ZPA.PKEY,1) AND ZPA.IDPA = 'PT' AND ZPA.PKEY LIKE 'PAYTYPR%'
+LEFT JOIN		  {schema}.GCM AS GCM ON RCM.CCURR = GCM.CURCDE
+LEFT JOIN		  {schema}.IWM AS IWM ON RCM.CWHSE = IWM.LWHS AND IWM.WMCOMP = 9
+WHERE             RCM.CMID = 'CM'
+AND               RCM.CCUST BETWEEN 9900000 AND 9999999
+AND               RCM.CMUF02 = '1'
+AND               (RCM.CREF01 IN ({routeCodes}) OR RCM.CMUF04 IN ({routeCodes})) OR RCM.CWHSE IN ({routeCodes})
+ORDER BY          RCM.CMUF01 ASC

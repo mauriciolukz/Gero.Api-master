@@ -1,0 +1,4 @@
+﻿Select		Cast(Valor As Int) As Id,
+			Descripcion As Name
+From		DISTRIBUCION.DST_DiccionarioDato
+Where		IDTipoEntrada = 4

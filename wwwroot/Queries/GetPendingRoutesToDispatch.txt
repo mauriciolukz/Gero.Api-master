@@ -1,0 +1,26 @@
+﻿SELECT		ROW_NUMBER() OVER (ORDER BY DDR.DD_Nombre) AS Id,
+			CONVERT(varchar, P.fechaEntrega, 23) AS DeliveryDate,
+			LTRIM(RTRIM(DDR.DD_InformacionAdicional1)) AS WarehouseCode,
+			DDR.DD_Nombre AS RouteCode,
+			LTRIM(RTRIM(DDR.DD_Descripcion)) AS RouteName,
+			LTRIM(RTRIM(DDR.DD_InformacionAdicional2)) AS RouteType,
+			P.RutaEntrega As DeliveryRoute,
+			COUNT(P.idPedido) AS TotalOrders		
+FROM		Intranet.dbo.DiccionarioDeDatos DDR
+INNER JOIN	Intranet.DISTRIBUCION.DST_Pedido AS P
+			ON DDR.DD_Nombre = P.RutaEntrega
+			AND			P.PedidoConfirmado = 1
+			AND			P. Finalizado = 0
+			AND			ISNULL(P.Consolidado,1) = 1
+WHERE		DDR.DD_PadreID = 2151
+AND			DDR.DD_EstaActivo = 1
+AND			LTRIM(RTRIM(DDR.DD_InformacionAdicional1)) = '{warehouseCode}'
+AND			CAST(CONVERT(VARCHAR(8), P.FechaEntrega, 112) AS INT) BETWEEN {startDate} AND {endDate}
+GROUP BY	LTRIM(RTRIM(DDR.DD_InformacionAdicional1)),
+			CONVERT(varchar, P.fechaEntrega, 23),
+			DDR.DD_Nombre,
+			LTRIM(RTRIM(DDR.DD_Descripcion)),
+			LTRIM(RTRIM(DDR.DD_InformacionAdicional2)),
+			P.RutaEntrega
+ORDER BY	CONVERT(varchar, P.fechaEntrega, 23) ASC,
+			DDR.DD_Nombre ASC

@@ -1,0 +1,86 @@
+﻿
+declare @tasa_cambio AS decimal (18,4)
+Select top 1 @tasa_cambio = Rate FROM DISTRIBUCION.ExchangeRates WHERE  CAST(CONVERT(VARCHAR(8), ExchangeDate, 112) AS INT) <= CAST(CONVERT(VARCHAR(8),  GETDATE(), 112) AS INT) ORDER BY ExchangeDate DESC
+
+
+SELECT
+	GroupCode,
+	SUM(TotalCase) AS TotalCase,
+	SUM(TotalNineLitreCase) AS TotalNineLitreCase,
+	SUM(Total) AS TotalAmount
+	INTO #VENTA
+	FROM(
+	SELECT		
+		--DF.SKU,
+		CASE WHEN LEN(LTRIM(RTRIM(IIM.IREF01)))= 0 THEN 
+				(CASE
+						  WHEN IIM.ICLAS IN ('FV', 'FW','LI') THEN '43'
+						  WHEN IIM.ICLAS IN ('FA', 'FB', 'FC','FH','FK', 'FM') THEN '20'
+						  WHEN IIM.ICLAS IN ('PA', 'PE', 'PF','PL','PO','RP') THEN '21'
+						  WHEN IIM.ICLAS IN ('AA','AC') THEN '22'
+						  WHEN IIM.ICLAS IN ('1D') THEN '64'
+						  WHEN IIM.ICLAS IN ('BC', '7A', '7B', '7F') THEN '24'
+						  WHEN IIM.ICLAS IN ('HA') THEN '23'
+						  ELSE '00'						
+					END
+					)				
+			ELSE				
+				COALESCE(IIM.IREF01, '0')
+		END AS GroupCode, 
+		ROUND((CAST( DF.TotalUnidades AS FLOAT ) / CAST(COALESCE(LTRIM(RTRIM(CONT.PNDES)),1) AS FLOAT )),2) AS TotalCase,
+		(ROUND((CAST( DF.TotalUnidades AS FLOAT ) / CAST(COALESCE(LTRIM(RTRIM(CONT.PNDES)),1) AS FLOAT )),2) * 
+			(CASE LTRIM(RTRIM(FACTOR.PNDES)) WHEN '-' THEN 1.00 WHEN '_' THEN 1.00 WHEN '*' THEN 1.00 ELSE COALESCE(LTRIM(RTRIM(FACTOR.PNDES)),1.00) END ) ) AS TotalNineLitreCase,
+		DF.Total
+		 FROM DISTRIBUCION.DST_Factura AS F
+		INNER JOIN DISTRIBUCION.DST_DetalleFactura AS DF
+		ON F.IDFactura = DF.IDFactura
+		INNER JOIN ISADB01.[DW_NSEL-CLNSA].ERPLXF.IIM AS IIM
+		ON DF.SKU = IIM.IPROD
+		INNER JOIN ISADB01.[DW_NSEL-CLNSA].ERPLXF.MPN AS CONT
+			ON DF.SKU = CONT.PNPROD AND CONT.PNSEQ = 3
+			INNER JOIN ISADB01.[DW_NSEL-CLNSA].ERPLXF.MPN AS FACTOR
+			ON DF.SKU = FACTOR.PNPROD AND FACTOR.PNSEQ = 6
+		WHERE
+		YEAR(F.FechaFactura)= YEAR(GETDATE())
+		AND MONTH(F.FechaFactura) =  MONTH(GETDATE())
+		AND F.CodigoCliente IN ( SELECT RCM.CCUST FROM  ISADB01.[DW_NSEL-CLNSA].ERPLXF.RCM AS RCM WHERE LTRIM(RTRIM(RCM.CREF01)) = '{routeCode}' OR LTRIM(RTRIM(RCM.CMUF04)) = '{routeCode}')
+	) AS TBL
+	GROUP BY GroupCode
+
+
+
+SELECT 
+	ROW_NUMBER() OVER (ORDER BY TS.[Route]) AS Id,
+	TS.[Route] AS RouteCode,
+	TS.[Year],
+	TS.[Month],
+	TS.ItemFamilyCode,
+	DD.Descripcion AS ItemFamily,
+	SUM(TS.NineLitresTarget) AS NineLitresTarget,
+	SUM(TS.TargetAmount) AS TargetAmount,
+	SUM(TS.NineLitresTargetPerDay) AS NineLitresTargetPerDay,
+	SUM(TS.TargetAmountPerDay) AS TargetAmountPerDay,
+	SUM(V.TotalCase)  AS TotalCase,
+	SUM(V.TotalNineLitreCase) AS TotalNineLitreCase,
+	ISNULL( CAST( ROUND( (SUM(V.TotalNineLitreCase) / NULLIF( SUM(TS.NineLitresTarget),0)) * 100, 0) AS int) , 0) AS PercentAdvanceNineLitreCase,
+	SUM(V.TotalAmount) /  @tasa_cambio AS TotalAmount,
+	ISNULL( CAST(  ROUND( (  (SUM(V.TotalAmount) /  @tasa_cambio ) / NULLIF( SUM(TS.TargetAmount),0)) * 100, 0) AS int) , 0) AS PercentAdvanceAmount
+
+FROM
+	DISTRIBUCION.TargetSales AS TS
+	INNER JOIN DISTRIBUCION.DST_DiccionarioDato AS DD
+		ON TS.ItemFamilyCode = DD.Valor AND DD.IDTipoEntrada = 15
+	INNER JOIN #VENTA AS V
+		ON TS.ItemFamilyCode = V.GroupCode
+WHERE
+	TS.[ROUTE] = '{routeCode}'
+	AND TS.[YEAR] = YEAR(GETDATE())
+	AND TS.[MONTH] =  MONTH(GETDATE())
+	GROUP BY 
+	TS.[ROUTE],
+	TS.[YEAR],
+	TS.[MONTH],
+	TS.ItemFamilyCode,
+	DD.Descripcion
+
+IF OBJECT_ID('tempdb..#VENTA') IS NOT NULL DROP TABLE #VENTA

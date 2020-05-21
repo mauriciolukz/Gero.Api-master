@@ -1,0 +1,93 @@
+﻿-- Applicant - Checker
+
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(15, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(7, 39, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(9, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(18, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(16, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(41, 43, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(8, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(33, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(31, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(3, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(21, 42, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(35, 38, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(50, 44, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(19, 42, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(22, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(32, 47, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(14, 47, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(13, 47, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(4, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(1, 36, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(26, 38, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(25, 38, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(30, 38, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(17, 39, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(27, 39, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(12, 39, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(2, 39, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(24, 39, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(34, 42, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(20, 42, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(10, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(29, 46, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(28, 40, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(6, 38, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(4, 36, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(23, 39, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(5, 41, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(11, 41, 'Active');
+
+-- Checker - Approver
+
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(14, 32, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(13, 32, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(3, 33, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(25, 30, 'Active');
+
+-- Approver - Master approver
+
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(49, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(42, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(34, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(30, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(40, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(33, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(15, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(39, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(2, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(7, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(9, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(43, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(5, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(23, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(18, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(16, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(41, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(11, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(32, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(14, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(45, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(13, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(31, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(8, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(38, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(3, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(21, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(35, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(24, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(44, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(50, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(37, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(6, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(19, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(20, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(12, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(22, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(25, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(26, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(27, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(17, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(46, 48, 'Active');
+Insert Into DISTRIBUCION.CouponUserWithApprovers(ApplicantUserId, ApproverUserId, Status) Values(29, 48, 'Active');

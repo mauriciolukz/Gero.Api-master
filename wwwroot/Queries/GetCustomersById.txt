@@ -1,0 +1,4 @@
+﻿Select		Ltrim(Rtrim(CCUST)) As CustomerCode,
+			Ltrim(Rtrim(CNME)) As CUstomerName
+From		{schema}.RCM
+Where		CCUST In ({customerCodes})

@@ -1,0 +1,4 @@
+﻿Update		dbo.DiccionarioDeDatos
+Set			DD_InformacionAdicional2 = 'Autoventa'
+Where		DD_PadreID = 2151
+And			Left(DD_Nombre, 1) In ('A', 'V');

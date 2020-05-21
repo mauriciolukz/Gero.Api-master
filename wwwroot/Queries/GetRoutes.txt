@@ -1,0 +1,8 @@
+﻿SELECT		DDR.DD_Nombre AS RouteCode,
+			LTRIM(RTRIM(DDR.DD_Descripcion)) AS RouteName,
+			LTRIM(RTRIM(DDR.DD_InformacionAdicional2)) AS RouteType,
+			LTRIM(RTRIM(DDR.DD_InformacionAdicional1)) AS WarehouseCode
+FROM		Intranet.dbo.DiccionarioDeDatos DDR
+WHERE		DDR.DD_PadreID = 2151
+AND			DDR.DD_EstaActivo = 1
+ORDER BY	DDR.DD_Nombre ASC
